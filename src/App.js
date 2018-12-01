@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
+import classes from './App.css'
 import Person from './Person/Person'
 // import Radium, { StyleRoot } from 'radium';
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
+
 
 //app inherites from component
 class App extends Component {
@@ -52,19 +55,20 @@ class App extends Component {
   //this allows indeirect access to the state 
   render() {
     // inline styling
-    const style = {
-      backgroundColor: 'green',
-      font: 'inherit',
-      border: '1x solid blue',
-      padding: '8px',
-      cursor: 'pointer',
-      // ':hover':{
-      //   backgroundColor: 'lightgreen',
-      //   color: 'black'
-      // }
-    };
+    // const style = {
+    //   backgroundColor: 'green',
+    //   font: 'inherit',
+    //   border: '1x solid blue',
+    //   padding: '8px',
+    //   cursor: 'pointer',
+    //   // ':hover':{
+    //   //   backgroundColor: 'lightgreen',
+    //   //   color: 'black'
+    //   // }
+    // };
 
     let persons = null;
+    let btnClass = "";
 
     if (this.state.showPersons) {
       //map - taking individual element and an index
@@ -72,18 +76,19 @@ class App extends Component {
       persons = (
           <div>
             {this.state.persons.map((person, index) => {
-              return <Person 
+              return <ErrorBoundary><Person 
                 click={() => this.deletePersonsHandler(index)}
                 name={person.name} 
                 age={person.age}
                 key={person.id} 
                 changed={(event) => this.nameChangeHandler(event, person.id)}
                 />
-                
+                </ErrorBoundary>                
             })}
         </div> 
       )
-      style.backgroundColor = 'red';
+      btnClass = classes.Red
+      // style.backgroundColor = 'red';
       // style[':hover'] = {
       //   backgroundColor: 'salmon',
       //   color: 'black'
@@ -91,20 +96,20 @@ class App extends Component {
     };
 
     let classes_red = ['red', 'bold'].join(' ')
-    const classes = [];
+    const assignedClasses = [];
     if(this.state.persons.length <=2){
-      classes.push('red')
+      assignedClasses.push(classes.red)
     }
     if(this.state.persons.length<=1){
-      classes.push('bold')
+      assignedClasses.push(classes.bold)
     }
 
     return (
-      <div className="App">
-        <h1 className={classes.join(' ')}>Hello, react app!</h1>
+      <div className={classes.App}>
+        <h1 className={assignedClasses.join(' ')}>Hello, react app!</h1>
         <h1 className = {classes_red}>this-is-sub-title</h1>
         <button 
-          style={style}
+          className={btnClass}
           onClick={this.togglePersonsHandler}>Toggle Name</button>
           {persons}
       </div>
